@@ -8,7 +8,10 @@ from models import Todos
 from database import SessionLocal
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/todos',
+    tags=['todos']
+)
 
 def get_db():
     db = SessionLocal()
