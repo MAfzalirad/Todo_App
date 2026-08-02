@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
-from database import SessionLocal
 from starlette import status
-from models import Users
-from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+from passlib.context import CryptContext
 from jose import jwt, JWTError
+from ..database import SessionLocal
+from ..models import Users
 
 router = APIRouter(
     prefix='/auth',
@@ -59,6 +58,7 @@ class CreateUserRequest(BaseModel):
     last_name: str
     password: str
     role: str
+    phone_number: str
 
 
 class Token(BaseModel):
@@ -88,7 +88,8 @@ async def create_user(db: db_dependency,create_user_request: CreateUserRequest):
         last_name = create_user_request.last_name,
         hash_password = bcrypt_context.hash(create_user_request.password),
         role = create_user_request.role,
-        is_active = True
+        is_active = True,
+        phone_number = create_user_request.phone_number
     )
 
 
