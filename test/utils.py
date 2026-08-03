@@ -70,7 +70,7 @@ def test_user():
     db = TestingSessionLocal()
     db.add(user)
     db.commit()
-    yield db
+    yield user
     with engine.connect() as connection:
         connection.execute(text("DELETE FROM users;"))
         connection.commit()
