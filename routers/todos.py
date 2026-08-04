@@ -49,7 +49,7 @@ async def render_todo_page(request: Request, db: db_dependency):
         if user is None:
             return redirect_to_login()
 
-        todos = db.query(Todos).filter(Todos.id == user.get('id')).all
+        todos = db.query(Todos).filter(Todos.pwmer_id == user.get('id')).all()
         return templates.TemplateResponse(request, 'todo.html', {'todos': todos, 'user': user})
 
     except:
