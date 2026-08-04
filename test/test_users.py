@@ -10,7 +10,7 @@ app.dependency_overrides[get_current_user] = override_get_current_user
 def test_get_user_info(test_user):
     response = client.get('/user/')
     assert response.status_code == status.HTTP_200_OK
-    assert response.json()['user_name'] == 'Abzil'
+    assert response.json()['username'] == 'Abzil'
     assert response.json()['email'] == 'Abzil@gmail.com'
     assert response.json()['first_name'] == 'Abzil'
     assert response.json()['last_name'] == 'Rad'

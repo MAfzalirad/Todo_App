@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 from starlette import status
@@ -9,6 +9,8 @@ from passlib.context import CryptContext
 from jose import jwt, JWTError
 from ..database import SessionLocal
 from ..models import Users
+from fastapi.templating import Jinja2Templates
+
 
 router = APIRouter(
     prefix='/auth',
@@ -34,8 +36,22 @@ def get_db():
 db_dependency = Annotated[Session, Depends(get_db)]
 
 
-def authenticate_user(user_name:str, password:str, db):
-    user = db.query(Users).filter(Users.user_name == user_name).first()
+templates = Jinja2Templates(directory="Todo_App/templates")
+
+###pages
+@router.get("/login-page")
+def render_login_page(request: Request):
+    return templates.TemplateResponse(request, 'login.html', {})
+
+
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse(request, 'register.html', {})
+
+####End points
+
+def authenticate_user(username:str, password:str, db):
+    user = db.query(Users).filter(Users.username == username).first()
     if not user:
         return False
     if not bcrypt_context.verify(password, user.hash_password):
@@ -52,7 +68,7 @@ def create_access_token(username: str, user_id: int,role: str, expires_delta: ti
 
 
 class CreateUserRequest(BaseModel):
-    user_name: str
+    username: str
     email: str
     first_name: str
     last_name: str
@@ -83,7 +99,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 async def create_user(db: db_dependency,create_user_request: CreateUserRequest):
     create_user_model = Users(
         email = create_user_request.email,
-        user_name = create_user_request.user_name,
+        username = create_user_request.username,
         first_name = create_user_request.first_name,
         last_name = create_user_request.last_name,
         hash_password = bcrypt_context.hash(create_user_request.password),
@@ -102,5 +118,5 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate user.')
-    token = create_access_token(user.user_name, user.id,user.role, timedelta(minutes=20))
+    token = create_access_token(user.username, user.id,user.role, timedelta(minutes=20))
     return {'access_token': token, 'token_type': 'bearer'}

@@ -11,13 +11,13 @@ app.dependency_overrides[get_db] = override_get_db
 
 def test_authenticate_user(test_user):
     db = TestingSessionLocal()
-    authenticated_user = authenticate_user(test_user.user_name, 'Abzil123', db)
+    authenticated_user = authenticate_user(test_user.username, 'Abzil123', db)
     assert authenticated_user is not None
 
     non_existing_user = authenticate_user('WrongUsername', 'Abzil123', db)
     assert non_existing_user is False
 
-    wrong_password_user = authenticate_user(test_user.user_name, 'Wrong Password', db)
+    wrong_password_user = authenticate_user(test_user.username, 'Wrong Password', db)
     assert wrong_password_user is False
 
 def test_create_access_token():
@@ -57,7 +57,7 @@ async def test_get_current_user_missing_payload():
 
 # def test_create_user():
 #     request_user = {
-#         'user_name' : 'Abzil',
+#         'username' : 'Abzil',
 #         'email' : 'Abzil@gmail.com',
 #         'first_name' : 'Abzil',
 #         'last_name' : 'Rad',
