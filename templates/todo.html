@@ -24,7 +24,7 @@
                 {% if todo.complete == False %}
                 <tr class="pointer">
                     <td>{{loop.index}}</td>
-                    <td>{{loop.title}}</td>
+                    <td>{{todo.title}}</td>
                     <td>
                         <button onclick="window.location.href='edit-todo-page/{{todo.id}}'" type="button" class="btn btn-info">
                             Edit
@@ -34,7 +34,7 @@
                 {% else %}
                 <tr class="pointer alert alert-success">
                     <td>{{loop.index}}</td>
-                    <td class="strike-throught-td">{{loop.title}}</td>
+                    <td class="strike-throught-td">{{todo.title}}</td>
                     <td>
                         <button onclick="window.location.href='edit-todo-page/{{todo.id}}'" type="button" class="btn btn-info">
                             Edit
