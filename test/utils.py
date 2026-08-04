@@ -57,7 +57,7 @@ def test_todo():
 @pytest.fixture
 def test_user():
     user = Users(
-        user_name = 'Abzil',
+        username = 'Abzil',
         email = 'Abzil@gmail.com',
         first_name = 'Abzil',
         last_name = 'Rad',
