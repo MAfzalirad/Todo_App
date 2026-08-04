@@ -44,6 +44,9 @@ def render_login_page(request: Request):
     return templates.TemplateResponse(request, 'login.html', {})
 
 
+@router.get("/register-page")
+def render_register_page(request: Request):
+    return templates.TemplateResponse(request, 'register.html', {})
 
 ####End points
 
